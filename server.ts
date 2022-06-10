@@ -1,6 +1,9 @@
 import { serve } from "https://deno.land/std@0.142.0/http/server.ts";
 
 async function handler(req: Request): Promise<Response> {
+    const allowed_origin = env.get("ALLOWED_ORIGIN");
+    const email_to = env.get("EMAIL_TO");
+
     switch (req.method) {
         case "POST": {
             const body = await req.formData();
@@ -10,8 +13,11 @@ async function handler(req: Request): Promise<Response> {
 
             const data = {
                 message: "sent!",
+                r: req,
+                a: allowed_origin,
+                e: email_to
             };
-
+            
             const response = JSON.stringify(data, null, 2);
 
             return new Response(response, {
@@ -20,7 +26,12 @@ async function handler(req: Request): Promise<Response> {
         }
 
         default:
-            return new Response("Invalid method", {
+            const data = {
+                message: "Invalid method",
+                a: allowed_origin,
+                e: email_to
+            };
+            return new Response(JSON.stringify(data, null, 2), {
                 status: 405,
                 headers: { "content-type": "application/json; charset=utf-8" },
             });
