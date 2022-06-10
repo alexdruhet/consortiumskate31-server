@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.142.0/http/server.ts";
 
 async function handler(req: Request): Promise<Response> {
+    const env = Deno.env.toObject();
     const allowed_origin = env.get("ALLOWED_ORIGIN");
     const email_to = env.get("EMAIL_TO");
 
