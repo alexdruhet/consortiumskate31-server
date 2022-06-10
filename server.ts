@@ -1,23 +1,43 @@
 import { serve } from "https://deno.land/std@0.142.0/http/server.ts";
+import { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
+import "https://deno.land/x/dotenv/load.ts";
+
 
 async function handler(req: Request): Promise<Response> {
-    const allowed_origin = Deno.env.get("ALLOWED_ORIGIN");
-    const email_to = Deno.env.get("EMAIL_TO");
+    const { ALLOWED_ORIGIN, EMAIL_TO, PASSWORD } = Deno.env.toObject();
 
     switch (req.method) {
         case "POST": {
             const body = await req.formData();
+            const emailFrom = body.get("email") || EMAIL_TO;
             const name = body.get("name") || "anonymous";
-            const message = body.get("message");
-            //return new Response(`Hello ${name}!`);
+            const message = body.get("message") || "test";
+
+            const client = new SmtpClient();
+            const connectConfig: any = {
+                hostname: "smtp.gmail.com",
+                port: 465,
+                username: EMAIL_TO,
+                password: PASSWORD,
+            };
+            await client.connectTLS(connectConfig);
+
+            await client.send({
+                from: emailFrom,
+                to: EMAIL_TO,
+                subject: `[${ALLOWED_ORIGIN}] message de ${name}`,
+                content: message,
+            });
+
+            await client.close();
 
             const data = {
                 message: "sent!",
                 r: req,
-                a: allowed_origin,
-                e: email_to
+                a: ALLOWED_ORIGIN,
+                e: EMAIL_TO
             };
-            
+
             const response = JSON.stringify(data, null, 2);
 
             return new Response(response, {
@@ -28,8 +48,8 @@ async function handler(req: Request): Promise<Response> {
         default:
             const data = {
                 message: "Invalid method",
-                a: allowed_origin,
-                e: email_to
+                a: EMAIL_TO,
+                e: EMAIL_TO
             };
             return new Response(JSON.stringify(data, null, 2), {
                 status: 405,
