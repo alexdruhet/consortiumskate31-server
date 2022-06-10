@@ -33,9 +33,7 @@ async function handler(req: Request): Promise<Response> {
 
             const data = {
                 message: "sent!",
-                r: req,
-                a: ALLOWED_ORIGIN,
-                e: EMAIL_TO
+                r: req
             };
 
             const response = JSON.stringify(data, null, 2);
@@ -47,10 +45,7 @@ async function handler(req: Request): Promise<Response> {
 
         default:
             const data = {
-                message: "Invalid method",
-                r: req,
-                a: ALLOWED_ORIGIN,
-                e: EMAIL_TO
+                message: "Invalid method"
             };
             return new Response(JSON.stringify(data, null, 2), {
                 status: 405,
