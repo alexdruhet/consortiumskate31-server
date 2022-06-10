@@ -1,3 +1,7 @@
 import { serve } from "https://deno.land/std@0.142.0/http/server.ts";
 
-serve((req: Request) => new Response("Hello World"));
+serve((_req) => {
+    return new Response("Hello World!", {
+      headers: { "content-type": "text/plain" },
+    });
+  });
