@@ -20,16 +20,16 @@ async function handler(req: Request): Promise<Response> {
                 username: EMAIL_TO,
                 password: PASSWORD,
             };
-            await client.connectTLS(connectConfig);
+            //await client.connectTLS(connectConfig);
 
-            await client.send({
-                from: emailFrom,
-                to: EMAIL_TO,
-                subject: `[${ALLOWED_ORIGIN}] message de ${name}`,
-                content: message,
-            });
+            //await client.send({
+            //    from: emailFrom,
+            //    to: EMAIL_TO,
+            //    subject: `[${ALLOWED_ORIGIN}] message de ${name}`,
+            //    content: message,
+            //});
 
-            await client.close();
+            //await client.close();
 
             const data = {
                 message: "sent!",
