@@ -6,6 +6,8 @@ import "https://deno.land/x/dotenv/load.ts";
 async function handler(req: Request): Promise<Response> {
     const { ALLOWED_ORIGIN, EMAIL_TO, PASSWORD } = Deno.env.toObject();
 
+    console.log(req);
+
     switch (req.method) {
         case "POST": {
             const body = await req.formData();
@@ -32,8 +34,7 @@ async function handler(req: Request): Promise<Response> {
             //await client.close();
 
             const data = {
-                message: "sent!",
-                r: req
+                message: "sent!"
             };
 
             const response = JSON.stringify(data, null, 2);
@@ -41,7 +42,7 @@ async function handler(req: Request): Promise<Response> {
             return new Response(response, {
                 headers: {
                     "content-type": "application/json; charset=utf-8",
-                    "access-control-allow-origin": "*"
+                    "access-control-allow-origin": `${ALLOWED_ORIGIN}`
                 },
             });
         }
