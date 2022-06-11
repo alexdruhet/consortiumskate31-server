@@ -39,7 +39,10 @@ async function handler(req: Request): Promise<Response> {
             const response = JSON.stringify(data, null, 2);
 
             return new Response(response, {
-                headers: { "content-type": "application/json; charset=utf-8" },
+                headers: {
+                    "content-type": "application/json; charset=utf-8",
+                    "access-control-allow-origin": "*"
+                },
             });
         }
 
