@@ -12,8 +12,6 @@ async function handler(req: Request): Promise<Response> {
         "Vary": "Origin"
     };
 
-    console.log(req.headers.get("origin"), ALLOWED_ORIGIN, req.headers);
-
     if (
         !req.headers.has("origin")
         || (
@@ -32,29 +30,33 @@ async function handler(req: Request): Promise<Response> {
 
     switch (req.method) {
         case "POST": {
-            let hasError = false;
-            let errors = [];
-            const body = await req.formData();
-            console.log(body.entries());
+            let hasError: boolean = false;
+            let errors = { 'email': '', 'name': '', 'message': '' };
 
-            const emailFrom = body.get("email");
-            if (!email.valid(emailFrom)) {
+            const body: FormData = await req.formData();
+            console.log(body.get("email"));
+
+            const emailFrom: FormDataEntryValue | string = body.get("email") || '';
+            if (!email.valid(emailFrom.toString())) {
                 hasError = true;
-                errors['email'] = 'invalid email';
-                console.error(errors['email']);
+                errors.email = 'invalid email';
+                console.error(errors.email);
             }
-            const subject = `[Web Contact] message de ${emailFrom}`
-            const name = body.get("name");
-            if (!name) {
+
+            const subject: string = `[Web Contact] message de ${emailFrom}`
+
+            const name: FormDataEntryValue | string = body.get("name") || '';
+            if (!name.toString()) {
                 hasError = true;
-                errors['name'] = 'empty name';
-                console.error(errors['name']);
+                errors.name = 'empty name';
+                console.error(errors.name);
             }
-            const message = body.get("message");
-            if (!message) {
+
+            const message: FormDataEntryValue | string = body.get("message") || '';
+            if (!message.toString()) {
                 hasError = true;
-                errors['message'] = 'empty message';
-                console.error(errors['message']);
+                errors.message = 'empty message';
+                console.error(errors.message);
             }
 
             if (hasError) {
@@ -73,13 +75,15 @@ async function handler(req: Request): Promise<Response> {
                         to: [{ name: NAME_TO, email: EMAIL_TO }],
                     },
                 ],
-                from: { name: `${name}`, email: `${emailFrom}` },
+                from: { name: `${name.toString()}`, email: `${emailFrom.toString()}` },
                 content: [
-                    { type: "text/plain", value: `${message}` },
+                    { type: "text/plain", value: `${message.toString()}` },
                 ],
             };
 
             let sendGridResponse = await sendMail(mail, { apiKey: SENDGRID_API_KEY });
+
+            console.log(sendGridResponse);
 
             const data = {
                 message: "sent!"
@@ -103,5 +107,4 @@ async function handler(req: Request): Promise<Response> {
     }
 }
 
-serve(handler);
-
+serve(handler, { port: 8076 });
