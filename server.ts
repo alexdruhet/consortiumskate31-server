@@ -6,13 +6,12 @@ import "https://deno.land/x/dotenv/load.ts";
 async function handler(req: Request): Promise<Response> {
     const { ALLOWED_ORIGIN, EMAIL_TO, PASSWORD } = Deno.env.toObject();
     const responseHeaders = {
-        "content-type": "application/json; charset=utf-8",
-        "access-control-allow-origin": `${ALLOWED_ORIGIN}`,
-        "vary": "Origin"
+        "Content-Type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": `${ALLOWED_ORIGIN}`,
+        "Vary": "Origin"
     };
 
-    console.log(req.origin);
-    console.log(req.referrer);
+    console.log(req);
 
     if (!req.origin || (ALLOWED_ORIGIN !== '*' && req.origin !== ALLOWED_ORIGIN)) {
         const data = {
