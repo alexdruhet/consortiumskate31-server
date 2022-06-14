@@ -11,13 +11,13 @@ async function handler(req: Request): Promise<Response> {
         "Vary": "Origin"
     };
 
-    console.log(req.headers['origin'], ALLOWED_ORIGIN, req.headers);
+    console.log(req.headers.get('origin'), ALLOWED_ORIGIN, req.headers);
 
     if (
-        !req.headers.origin
+        !req.headers.has('origin')
         || (
             ALLOWED_ORIGIN !== '*'
-            && req.headers.origin !== ALLOWED_ORIGIN
+            && req.headers.get('origin') !== ALLOWED_ORIGIN
         )
     ) {
         const data = {
