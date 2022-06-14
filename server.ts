@@ -13,7 +13,7 @@ async function handler(req: Request): Promise<Response> {
 
     console.log(req.headers);
 
-    if (!req.origin || (ALLOWED_ORIGIN !== '*' && req.origin !== ALLOWED_ORIGIN)) {
+    if (!req.headers.origin || (ALLOWED_ORIGIN !== '*' && req.headers.origin !== ALLOWED_ORIGIN)) {
         const data = {
             message: "Forbidden access"
         };
