@@ -11,7 +11,7 @@ async function handler(req: Request): Promise<Response> {
         "Vary": "Origin"
     };
 
-    console.log(req.headers.origin, ALLOWED_ORIGIN);
+    console.log(req.headers['origin'], ALLOWED_ORIGIN, req.headers);
 
     if (
         !req.headers.origin
