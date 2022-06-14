@@ -60,7 +60,7 @@ async function handler(req: Request): Promise<Response> {
             }
 
             if (hasError) {
-                const response = JSON.stringify(errors, null, 2);
+                const response = JSON.stringify({ 'errors': errors, 'message': 'invalid data' }, null, 2);
 
                 return new Response(response, {
                     status: 400,
