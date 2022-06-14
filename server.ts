@@ -34,9 +34,9 @@ async function handler(req: Request): Promise<Response> {
             let errors = { 'email': '', 'name': '', 'message': '' };
 
             const body: FormData = await req.formData();
-            console.log(body.get("email"));
 
             const emailFrom: FormDataEntryValue | string = body.get("email") || '';
+            console.log('Email: ', emailFrom);
             if (!email.valid(emailFrom.toString())) {
                 hasError = true;
                 errors.email = 'invalid email';
@@ -46,6 +46,7 @@ async function handler(req: Request): Promise<Response> {
             const subject: string = `[Web Contact] message de ${emailFrom}`
 
             const name: FormDataEntryValue | string = body.get("name") || '';
+            console.log('Name: ', name);
             if (!name.toString()) {
                 hasError = true;
                 errors.name = 'empty name';
@@ -53,6 +54,7 @@ async function handler(req: Request): Promise<Response> {
             }
 
             const message: FormDataEntryValue | string = body.get("message") || '';
+            console.log('Message: ', message);
             if (!message.toString()) {
                 hasError = true;
                 errors.message = 'empty message';
@@ -60,7 +62,7 @@ async function handler(req: Request): Promise<Response> {
             }
 
             if (hasError) {
-                const response = JSON.stringify({ 'errors': errors, 'message': 'invalid data' }, null, 2);
+                const response = JSON.stringify({ 'message': 'invalid data', 'errors': errors }, null, 2);
 
                 return new Response(response, {
                     status: 400,
