@@ -35,6 +35,8 @@ async function handler(req: Request): Promise<Response> {
             let hasError = false;
             let errors = [];
             const body = await req.formData();
+            console.log(body);
+
             const emailFrom = body.get("email");
             if (!email.valid(emailFrom)) {
                 hasError = true;
