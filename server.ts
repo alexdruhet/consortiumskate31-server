@@ -6,7 +6,18 @@ import "https://deno.land/x/dotenv/load.ts";
 async function handler(req: Request): Promise<Response> {
     const { ALLOWED_ORIGIN, EMAIL_TO, PASSWORD } = Deno.env.toObject();
 
-    console.log(req);
+    console.log(req.origin);
+    console.log(req.referrer);
+
+    if (!req.origin || (ALLOWED_ORIGIN !== '*' && req.origin !== ALLOWED_ORIGIN)) {
+        const data = {
+            message: "Forbidden access"
+        };
+        return new Response(JSON.stringify(data, null, 2), {
+            status: 403,
+            headers: { "content-type": "application/json; charset=utf-8" },
+        });
+    }
 
     switch (req.method) {
         case "POST": {
