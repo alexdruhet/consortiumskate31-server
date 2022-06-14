@@ -5,6 +5,11 @@ import "https://deno.land/x/dotenv/load.ts";
 
 async function handler(req: Request): Promise<Response> {
     const { ALLOWED_ORIGIN, EMAIL_TO, PASSWORD } = Deno.env.toObject();
+    const responseHeaders = {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": `${ALLOWED_ORIGIN}`,
+        "vary": "Origin"
+    };
 
     console.log(req.origin);
     console.log(req.referrer);
@@ -15,7 +20,7 @@ async function handler(req: Request): Promise<Response> {
         };
         return new Response(JSON.stringify(data, null, 2), {
             status: 403,
-            headers: { "content-type": "application/json; charset=utf-8" },
+            headers: responseHeaders,
         });
     }
 
@@ -51,10 +56,7 @@ async function handler(req: Request): Promise<Response> {
             const response = JSON.stringify(data, null, 2);
 
             return new Response(response, {
-                headers: {
-                    "content-type": "application/json; charset=utf-8",
-                    "access-control-allow-origin": `${ALLOWED_ORIGIN}`
-                },
+                headers: responseHeaders,
             });
         }
 
@@ -64,7 +66,7 @@ async function handler(req: Request): Promise<Response> {
             };
             return new Response(JSON.stringify(data, null, 2), {
                 status: 405,
-                headers: { "content-type": "application/json; charset=utf-8" },
+                headers: responseHeaders,
             });
     }
 }
